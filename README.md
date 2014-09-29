@@ -6,6 +6,7 @@ aplicativo para gerenciamento de textos em mult idiomas para lliure
 <br>
 
 >6.1
+
 - [bug] - Alterada a permição padrão para public
 
 >6.0
