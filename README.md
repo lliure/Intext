@@ -8,6 +8,7 @@ aplicativo para gerenciamento de textos em mult idiomas para lliure
 >6.1
 
 - [bug] - Alterada a permição padrão para public
+- [update] - Adicionado arquivo de integração, localizado na pasta sys
 
 >6.0
 
