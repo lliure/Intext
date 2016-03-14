@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* Intext
+* Intext | lliure 5.x
 *
-* @Versão 7.0
+* @Versão 6.0
 * @Desenvolvedor Jeison Frasson <jomadee@lliure.com.br>
 * @Entre em contato com o desenvolvedor <jomadee@lliure.com.br> http://www.lliure.com.br/
 * @Licença http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -105,18 +105,18 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 		
 		$navegador->configSel = 'tipo';
 		$navegador->config[1] = array(	'link' => $llHome.'&amp;ac=edit&amp;id=',
-										'fa' => 'fa-align-left',
+										'ico' => $_ll['tema']['icones'].'notepad_2.png',
 										'coluna' => 'idd',								
 										);
 											
 		$navegador->config[3] = array(	'link' => $llHome.'&amp;ac=edit&amp;id=',
-										'fa' => 'fa-paragraph',
+										'ico' => $_ll['tema']['icones'].'text_letter_t.png',
 										'coluna' => 'idd',								
 										);
 											
 											
 		$navegador->config[2] = array(	'link' => $llHome.'&amp;gr=',
-										'fa' => 'fa-folder',
+										'ico' => $_ll['tema']['icones'].'folder.png',
 										'coluna' => 'nome_grupo',
 										'rename' => true
 										);
@@ -214,9 +214,9 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 		if(mysql_num_rows($query) == 0){
 			echo '<div class="boxCenter">
 					<div class="prd_no">
-						<span class="frase">Não existe a versão em <strong>'.$ll_lista_idiomas[$linguagem].'</strong> desse texto, você deseja criar agora?</span>
-						<a href="'.$_ll['app']['onserver'].'&ling='.$linguagem.'&ac=newling&id='.$_GET['id'].'" class="btnSim">Sim</a>
-						<a href="'.$_ll['app']['home'].'&ac=edit&amp;id='.$_GET['id'] .'" class="btnNao">Não</a>
+						<span class="frase">Não existe a versão em <strong>'.$ll_lista_idiomas[$linguagem].'</strong> desta categoria, você deseja criar agora?</span>
+						<a href="'.$llPasta.'step.php'.jf_monta_link($_GET, array('ling', 'ac')).'&amp;ling='.$linguagem.'&amp;ac=newling" class="btnSim">Sim</a>
+						<a href="'.$llHome.'&amp;ac=edit&amp;id='.$_GET['id'] .'" class="btnNao">Não</a>
 					</div>
 				</div>';
 		} else {
@@ -226,8 +226,6 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 				<?php
 				if(ll_ling()){
 					$ling = !isset($_GET['ling']) ? $_ll['ling'] : $_GET['ling'];
-					
-					//var_dump();
 					?>
 					<div class="abas">
 						<?php				
@@ -271,7 +269,7 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 					
 					<div class="botoes">
 						<a href="<?php echo $backReal;?>">Voltar</a>
-						<button type="submit" name="salvar" class="confirm">Gravar</button>
+						<button type="submit" name="salvar">Gravar</button>
 						<button type="submit" name="salvar-edit">Gravar e continuar editando</button>
 					</div>
 				</form>
@@ -280,17 +278,15 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 			<script type="text/javascript">	
 				ajustaForm();
 
-				tinymce.init({
-					selector: "textarea",
-					plugins: [
-							"advlist autolink autosave link lists hr",
-							"code fullscreen nonbreaking"
-					],
-
-					toolbar1: "bold italic underline strikethrough removeformat | alignleft aligncenter alignright alignjustify | bullist numlist | link unlink | code",
+				tinyMCE.init({
+					// General options
+					mode : "textareas",
+					theme : "lliure",
+					width: '100%',
+					height: '400px',
 					
-					menubar: false,
-					toolbar_items_size: 'small'
+					plugins : "safari,pagebreak,table,advhr,advimage,advlink,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,template,icode",
+					theme_advanced_buttons1 : "formatselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,forecolor,|,link,|,code,removeformat,fullscreen"					
 				});
 			</script>
 			<?php
@@ -325,6 +321,54 @@ switch(isset($_GET['ac']) ? $_GET['ac'] : 'home'){
 		}
 		
 		header('location: '.$retorno);
+	break;
+
+	case 'new':
+		header("Content-Type: text/html; charset=ISO-8859-1", true);
+		require_once("../../etc/bdconf.php");
+		require_once("../../includes/functions.php");
+
+		$_ll['conf']= @simplexml_load_file('../../etc/llconf.ll');
+		$_ll['ling'] = ll_ling();
+		
+
+		
+		$dados = array('tipo' => 1);
+
+		if(isset($_GET['gr']))
+			$dados['grupo'] = $_GET['gr'];
+			
+		$texto  = false;
+			
+		$_GET['tp'] = isset($_GET['tp']) ? $_GET['tp'] : 1;
+		switch($_GET['tp']){
+		case 1:
+		case 3:
+			$texto  = true;
+			$dados['tipo'] = $_GET['tp'];
+			break;
+		case 2:
+			$dados['tipo'] = $_GET['tp'];
+			$dados['nome_grupo'] = 'Novo grupo';
+			break;
+		}		
+
+		jf_insert(PREFIXO.'intext', $dados);
+		
+		
+		
+		if($texto)
+			jf_insert(PREFIXO.'intext_texto', array('id_fk' => $jf_ultimo_id, 'ling' => $_ll['ling']));
+
+	break;
+
+
+	case 'newling':
+		require_once("../../etc/bdconf.php"); 
+		require_once("../../includes/jf.funcoes.php");
+		
+		jf_insert(PREFIXO.'intext_texto', array('id_fk' => $_GET['id'], 'ling' => $_GET['ling']));
+		header('location: ../../index.php?app=intext&ac=edit&id='.$_GET['id'].'&ling='.$_GET['ling']);
 	break;
 }
 ?>
