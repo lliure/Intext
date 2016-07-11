@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* Intext | lliure 5.x
+* Intext
 *
-* @Versão 6.0
+* @Versão 9.0
 * @Desenvolvedor Jeison Frasson <jomadee@lliure.com.br>
 * @Entre em contato com o desenvolvedor <jomadee@lliure.com.br> http://www.lliure.com.br/
 * @Licença http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -12,24 +12,22 @@
 
 $llHome = "?app=intext";
 $llPasta = "app/intext/";
-$llTable = PREFIXO.'intext';
+$llTable = PREFIXO. 'intext';
 
 $botoes = array(
-	array('href' => $backReal, 'img' => $plgIcones.'br_prev.png', 'title' => $backNome)
-	);
+	array('href' => $backReal, 'fa' => 'fa-chevron-left', 'title' => $backNome)
+);
 
 if(!isset($_GET['id']) && ll_tsecuryt()){	
-	$botoes[] = array('href' => $llPasta.'step.php?ac=new&amp;tp=2'.(isset($_GET['gr']) ? '&amp;gr='.$_GET['gr'] : '' ), 'img' => $plgIcones.'folder.png', 'title' => 'Criar grupo', 'attr' => 'class="criar"');
-	
-	$botoes[] = array('href' => $llPasta.'step.php?ac=new&amp;tp=3'.(isset($_GET['gr']) ? '&amp;gr='.$_GET['gr'] : '' ), 'img' => $plgIcones.'text_letter_t.png', 'title' => 'Nova frase', 'attr' => 'class="criar"');
-	
-	$botoes[] = array('href' => $llPasta.'step.php?ac=new'.(isset($_GET['gr']) ? '&amp;gr='.$_GET['gr'] : '' ), 'img' => $plgIcones.'notepad_2.png', 'title' => 'Novo texto', 'attr' => 'class="criar"');
+	$botoes[] = array('href' => $_ll['app']['onserver'].'&ac=new&tp=2'. (isset($_GET['gr'])? '&gr='.$_GET['gr']: ''), 'fa' => 'fa-folder',       'title' => 'Criar grupo', 'attr' => 'class="criar"');
+	$botoes[] = array('href' => $_ll['app']['onserver'].'&ac=new&tp=3'. (isset($_GET['gr'])? '&gr='.$_GET['gr']: ''), 'fa' => 'fa-paragraph',    'title' => 'Nova frase',  'attr' => 'class="criar"');
+	$botoes[] = array('href' => $_ll['app']['onserver'].'&ac=new'.      (isset($_GET['gr'])? '&gr='.$_GET['gr']: ''), 'fa' => 'fa-align-left',   'title' => 'Novo texto',  'attr' => 'class="criar"');
+	$botoes[] = array('href' => $_ll['app']['onserver'].'&ac=new&tp=4'. (isset($_GET['gr'])? '&gr='.$_GET['gr']: ''), 'fa' => 'fa-file-image-o', 'title' => 'Nova Imagem', 'attr' => 'class="criar"');
 }
 
 echo app_bar('Intext', $botoes);
 
-require_once('step.php');
-?>
+require_once('step.php'); ?>
 
 <script type="text/javascript">
 	$('.criar').click(function(){

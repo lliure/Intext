@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `ll_intext` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `grupo` int(11) DEFAULT NULL,
   `idd` varchar(100) DEFAULT NULL,
-  `tipo` enum('1','2','3') NOT NULL DEFAULT '1' COMMENT '1=arquivos; 2=grupos; 3=frases',
+	`tipo` ENUM('1','2','3','4') NOT NULL DEFAULT '1' COMMENT '1=arquivos; 2=grupos; 3=frases; 4=imagem',
   `nome_grupo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idd` (`idd`),
